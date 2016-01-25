@@ -329,9 +329,9 @@ ofxDatGui2dPad* ofxDatGui::add2dPad(string label, ofRectangle bounds)
     return pad;
 }
 
-ofxDatGuiMatrix* ofxDatGui::addMatrix(string label, int numButtons, bool showLabels)
+ofxDatGuiMatrix* ofxDatGui::addMatrix(string label, int numButtons, bool showLabels, vector<string> labels)
 {
-    ofxDatGuiMatrix* matrix = new ofxDatGuiMatrix(label, numButtons, showLabels);
+    ofxDatGuiMatrix* matrix = new ofxDatGuiMatrix(label, numButtons, showLabels, labels);
     matrix->onMatrixEvent(this, &ofxDatGui::onMatrixEventCallback);
     attachItem(matrix);
     return matrix;
