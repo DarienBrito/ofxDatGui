@@ -20,15 +20,26 @@
     SOFTWARE.
 */
 
+/*
+ 
+ This version of the code contains a modification that allows for custom
+ labeling of the matrix's buttons. This modification is compatible with code
+ written with the unmodified version of this code.
+ 
+ Extended by: Darien Brito [http://darienbrito.com]
+ 
+*/
+
+
 #pragma once
 #include "ofxDatGuiComponent.h"
 
 class ofxDatGuiMatrixButton : public ofxDatGuiInteractiveObject {
 
     public:
-    
-        ofxDatGuiMatrixButton(int size, int index, bool showLabels)
+        ofxDatGuiMatrixButton(int size, int index, bool showLabels, string label = "") //Modified by Darien Brito
         {
+            mCustomLabel = label;
             mIndex = index;
             mSelected = false;
             mShowLabels = showLabels;
@@ -43,6 +54,7 @@ class ofxDatGuiMatrixButton : public ofxDatGuiInteractiveObject {
     
         void draw(int x, int y)
         {
+    
             mRect.x = x + origin.x;
             mRect.y = y + origin.y;
             ofPushStyle();
@@ -51,7 +63,9 @@ class ofxDatGuiMatrixButton : public ofxDatGuiInteractiveObject {
                 ofDrawRectangle(mRect);
                 if (mShowLabels) {
                     ofSetColor(mLabelColor);
-                    mFont.draw(ofToString(mIndex+1), mRect.x + mRect.width/2 - mFontRect.width/2, mRect.y + mRect.height/2 - mFontRect.height/2);
+                   // mFont.draw(ofToString(mIndex+1), mRect.x + mRect.width/2 - mFontRect.width/2, mRect.y + mRect.height/2 - mFontRect.height/2);
+                    mFont.draw(mCustomLabel, mRect.x + mRect.width/2 - mFontRect.width/2, mRect.y + mRect.height/2 - mFontRect.height/2);
+
                 }
             ofPopStyle();
         }
@@ -119,6 +133,8 @@ class ofxDatGuiMatrixButton : public ofxDatGuiInteractiveObject {
         int x;
         int y;
         int mIndex;
+        string mCustomLabel;
+    
         ofPoint origin;
         ofRectangle mRect;
         ofColor mBkgdColor;
@@ -147,8 +163,16 @@ class ofxDatGuiMatrix : public ofxDatGuiComponent {
 
     public:
     
-        ofxDatGuiMatrix(string label, int numButtons, bool showLabels = false) : ofxDatGuiComponent(label)
+    ofxDatGuiMatrix(string label, int numButtons, bool showLabels = false, vector<string> labels = {}) : ofxDatGuiComponent(label)
         {
+            // Check if empty, else fill with string numbers
+            if (labels.size() > 0 ) {
+                mLabels = labels;
+            } {
+                for(int i = 0; i < numButtons; i++) {
+                    mLabels.push_back(ofToString(i+1));
+                }
+            }
             mRadioMode = false;
             mNumButtons = numButtons;
             mShowLabels = showLabels;
@@ -272,7 +296,7 @@ class ofxDatGuiMatrix : public ofxDatGuiComponent {
         {
             btns.clear();
             for(int i=0; i < mNumButtons; i++) {
-                ofxDatGuiMatrixButton btn(mButtonSize, i, mShowLabels);
+                ofxDatGuiMatrixButton btn(mButtonSize, i, mShowLabels, mLabels[i] );
                 btn.setTheme(tmplt);
                 btn.onInternalEvent(this, &ofxDatGuiMatrix::onButtonSelected);
                 btns.push_back(btn);
@@ -285,6 +309,9 @@ class ofxDatGuiMatrix : public ofxDatGuiComponent {
         int mNumButtons;
         bool mRadioMode;
         bool mShowLabels;
+    
+        vector<string> mLabels;
+    
         ofColor mFillColor;
         ofRectangle mMatrixRect;
         static const int mMinPadding = 2;
