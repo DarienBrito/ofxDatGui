@@ -70,7 +70,7 @@ class ofxDatGui : public ofxDatGuiInteractiveObject
         ofxDatGuiWaveMonitor* addWaveMonitor(string label, float min, float max);
         ofxDatGuiValuePlotter* addValuePlotter(string label, float min, float max);
         ofxDatGuiColorPicker* addColorPicker(string label, ofColor color = ofColor::black);
-        ofxDatGuiMatrix* addMatrix(string label, int numButtons, bool showLabels = false);
+        ofxDatGuiMatrix* addMatrix(string label, int numButtons, bool showLabels = false, vector<string> labels = {});
         ofxDatGuiFolder* addFolder(string label, ofColor color = ofColor::white);
     
         ofxDatGuiHeader* getHeader();
